@@ -1,11 +1,40 @@
 <?xml verion="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
 	xsi:schemaLocation="
  		http://www.springframework.org/schema/beans
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
- 		
+ 		 		
  		<import resource="spring-discount-service.xml" />
-    
-    
+ 		
+ 		<bean id="auditorium1" class="com.yra.springpr.model.Auditorium" 
+ 			c:id="${aud1.id}" c:seatsNumber="${aud1.seatsNumber}" c:ref-vipSeats="${aud1.vipSeats}" c:vipSeatPrice="${aud1.vipSeatPrice}" />
+		<bean id="auditorium2" class="com.yra.springpr.model.Auditorium" 
+ 			c:id="${aud2.id}" c:seatsNumber="${aud2.seatsNumber}" c:ref-vipSeats="${aud2.vipSeats}" c:vipSeatPrice="${aud2.vipSeatPrice}" />
+ 		<bean id="auditorium3" class="com.yra.springpr.model.Auditorium" 
+ 			c:id="${aud3.id}" c:seatsNumber="${aud3.seatsNumber}" c:ref-vipSeats="${aud3.vipSeats}" c:vipSeatPrice="${aud3.vipSeatPrice}" />	
+ 		<bean id="auditoriumService" class="com.yra.springpr.service.AuditoriumService">
+ 			<constructor-arg>
+ 				<map>
+ 					<entry key="#{auditorium1.id}" value-ref="auditorium1" />
+ 					<entry key="#{auditorium2.id}" value-ref="auditorium2" />
+ 					<entry key="#{auditorium3.id}" value-ref="auditorium3" />
+ 				</map>
+ 			</constructor-arg>
+ 		</bean>
+ 		
+ 		<bean id="bookingService" class="com.yra.springpr.service.BookingService"
+ 			p:ref-discountService="discountService" p:ref-bookingDao="bookingDao" p:ref-eventDao="eventDao" />
+ 			
+		<bean id="eventService" class="com.yra.springpr.service.EventService">
+			<property name="eventDao" ref="eventDao" />		
+		</bean>
+		
+		<bean id="userService" class="com.yra.springpr.service.UserService">
+			<property name="userDao" ref="userDao" />
+			<property name="bookingDao" ref="bookingDao" />
+		</bean>
+ 		
 </beans>

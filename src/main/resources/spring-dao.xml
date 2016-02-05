@@ -5,6 +5,8 @@
  		http://www.springframework.org/schema/beans
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
  		
-    <bean id="userDao" class="com.yra"
+    <bean id="userDao" class="com.yra.springpr.dao.UserDaoMemoryImpl" />
+    <bean id="eventDao" class="com.yra.springpr.dao.EventDaoMemoryImpl" />
+    <bean id="bookingDao" class="com.yra.springpr.dao.BookingDaoMemoryImpl" />
     
 </beans>

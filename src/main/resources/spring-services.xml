@@ -5,8 +5,7 @@
  		http://www.springframework.org/schema/beans
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
  		
- 		<import resource="spring-services.xml" />
- 		<import resource="spring-dao.xml" />
+ 		<import resource="spring-discount-service.xml" />
     
     
 </beans>

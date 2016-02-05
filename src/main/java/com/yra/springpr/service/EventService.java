@@ -11,12 +11,7 @@ import com.yra.springpr.model.Rating;
 
 public class EventService {
     private EventDao eventDao;
-/*
- * create - should create Event with name, air dates and times, base price for tickets, rating (high, mid, low)
-remove, getByName, getAll
-getForDateRange(from, to) - returns events for specified date range (OPTIONAL)
-getNextEvents(to) - returns events from now till the ‘to’ date (OPTIONAL)
-assignAuditorium(event, auditorium, date) - assign auditorium for event for specific date*/
+
     public Event create(String name, List<Date> dates, double price, Rating rating) {
         Event event = new Event(name, rating, price);
         eventDao.save(event, dates);

@@ -26,4 +26,8 @@ public class AuditoriumService {
         return auditoriums.get(id).getVipSeats();
     }
     
+    public Auditorium getAuditoriumById(int id) {
+    	return auditoriums.get(id);
+    }
+    
 }

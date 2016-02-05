@@ -12,7 +12,6 @@ public class DiscountService {
         this.discountStrategies = discountStrategies;
     }
 
-    // returns discount for each ticket for the user on particular event
     public double getDiscount(User user, Booking booking) {
         double discount = 0;
         for (DiscountStrategy discountStrategy : discountStrategies) {

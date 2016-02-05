@@ -10,7 +10,6 @@ public class User {
     private final Date dateOfBirth;
 
     public User(String name, String email, Date dateOfBirth) {
-        super();
         this.name = name;
         this.email = email;
         this.dateOfBirth = dateOfBirth;

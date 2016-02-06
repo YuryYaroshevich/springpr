@@ -1,6 +1,8 @@
 package com.yra.springpr.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,20 +53,27 @@ public class BookingDaoMemoryImpl implements BookingDao {
 
     @Override
     public List<Ticket> getBooked(EventTimetable eventTimetable) {
+        return getTickets(bookingStorage.values());
+    }
+
+    @Override
+    public List<Ticket> getBooked(User user) {
+        Map<EventTimetable, Set<Integer>> userEventsToPlaces = bookingStorage.get(user);
+        return userEventsToPlaces == null ? 
+                Collections.<Ticket>emptyList() :
+                    getTickets(Collections.singletonList(userEventsToPlaces));
+    }
+    
+    private List<Ticket> getTickets(Collection<Map<EventTimetable, Set<Integer>>> eventsToPlaces) {
         List<Ticket> tickets = new ArrayList<>();
-        for (Map<EventTimetable, Set<Integer>> eventsToPlaces : bookingStorage.values()) {
-            Set<Integer> places = eventsToPlaces.get(eventTimetable);
-            if (!places.isEmpty()) {
+        for (Map<EventTimetable, Set<Integer>> eventToPlaces : eventsToPlaces) {
+            for (EventTimetable eventTimetable : eventToPlaces.keySet()) {
+                Set<Integer> places = eventToPlaces.get(eventTimetable);
                 for (Integer placeId : places) {
                     tickets.add(new Ticket(eventTimetable, placeId));
                 }
             }
         }
         return tickets;
-    }
-
-    @Override
-    public List<Ticket> getBooked(User user) {
-        return null;
     }
 }

@@ -57,4 +57,10 @@ public class EventTimetable {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "EventTimetable [event=" + event + ", date=" + date + "]";
+    }
+
 }

@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.google.common.collect.Lists;
@@ -28,8 +28,8 @@ public class Runner {
 	private static DateFormat dateFormatter = new SimpleDateFormat("M/dd/yyyy");
 	private static DateFormat dateTimeFormatter = new SimpleDateFormat("M/dd/yyyy hh:mm:ss");
 	
-	public static void main(String[] args) throws ParseException {
-		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
+	public static void main(String[] args) throws ParseException {	    
+		ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
 		
 		UserService userService = ctx.getBean("userService", UserService.class);
 		User user = new User("Batman Batmanovich", "batman@epam.com", dateFormatter.parse("02/17/1992"));
@@ -58,5 +58,7 @@ public class Runner {
 		System.out.println(tickets);
 		List<Ticket> userTickets = userService.getBookedTickets(user);
 		System.out.println(userTickets);
+		
+		ctx.close();
 	}
 }

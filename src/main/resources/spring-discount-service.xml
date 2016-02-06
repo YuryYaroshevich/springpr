@@ -1,4 +1,4 @@
-<?xml verion="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:c="http://www.springframework.org/schema/c"
@@ -9,9 +9,9 @@
     <bean id="discountService" class="com.yra.springpr.service.discount.DiscountService">
     	<constructor-arg>
     		<list>
-    			<bean class="com.yra.springpr.service.discount.BirthdayDiscountStrategy" c:discount="${discount}" />
+    			<bean class="com.yra.springpr.service.discount.BirthdayDiscountStrategy" c:discount="${birthday.discount}" />
     			<bean class="com.yra.springpr.service.discount.EveryNTicketDiscountStrategy"
-    				c:ref-bookingDao="bookingDao" c:N="${N}" c:discount="${discount}" />
+    				c:bookingDao-ref="bookingDao" c:N="${Nth.ticket.number}" c:discount="${every.n.ticket.discount}" />
     		</list>
     	</constructor-arg>
     </bean>

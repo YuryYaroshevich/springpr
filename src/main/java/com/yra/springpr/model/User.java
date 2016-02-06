@@ -73,6 +73,11 @@ public class User {
         } else if (!name.equals(other.name))
             return false;
         return true;
-    }   
-    
+    }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", name=" + name + ", email=" + email
+                + ", dateOfBirth=" + dateOfBirth + "]";
+    }
 }

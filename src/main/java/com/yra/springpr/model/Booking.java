@@ -26,4 +26,11 @@ public class Booking {
     public void setSeats(Set<Integer> seats) {
         this.seats = seats;
     }
+
+    @Override
+    public String toString() {
+        return "Booking [eventTimetable=" + eventTimetable + ", seats=" + seats
+                + "]";
+    }
+
 }

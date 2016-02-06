@@ -15,7 +15,7 @@ public class Auditorium {
         this.vipSeats = vipSeats;
         this.vipSeatPrice = vipSeatPrice;
     }
-    
+
     public int getVipSeatPrice() {
         return vipSeatPrice;
     }
@@ -66,6 +66,12 @@ public class Auditorium {
             return false;
         return true;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Auditorium [id=" + id + ", seatsNumber=" + seatsNumber
+                + ", vipSeats=" + vipSeats + ", vipSeatPrice=" + vipSeatPrice
+                + "]";
+    }
+
 }

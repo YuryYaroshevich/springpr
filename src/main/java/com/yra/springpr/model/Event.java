@@ -2,7 +2,6 @@ package com.yra.springpr.model;
 
 import java.util.UUID;
 
-
 public class Event {
     private final String id = UUID.randomUUID().toString();
     private final String name;
@@ -19,7 +18,7 @@ public class Event {
     public String getId() {
         return id;
     }
-    
+
     public String getName() {
         return name;
     }
@@ -71,6 +70,11 @@ public class Event {
             return false;
         return true;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Event [id=" + id + ", name=" + name + ", rating=" + rating
+                + ", basePrice=" + basePrice + "]";
+    }
+
 }

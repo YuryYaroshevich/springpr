@@ -9,10 +9,10 @@ public class EveryNTicketDiscountStrategy implements DiscountStrategy {
     private int N;
     private double discount;
     
-    public EveryNTicketDiscountStrategy(BookingDao bookingDao, int n,
+    public EveryNTicketDiscountStrategy(BookingDao bookingDao, int N,
             double discount) {
         this.bookingDao = bookingDao;
-        N = n;
+        this.N = N;
         this.discount = discount;
     }
     

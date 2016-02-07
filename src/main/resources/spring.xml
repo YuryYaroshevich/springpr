@@ -12,20 +12,10 @@
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<!-- <value>classpath:config/auditoriums.properties</value> -->
 				<value>classpath:config/discount.properties</value>
 			</list>
 		</property>
 	</bean>
 
-	<bean id="conversionService"
-		class="org.springframework.context.support.ConversionServiceFactoryBean">
-		<property name="converters">
-			<set>
-				<bean class="com.yra.springpr.util.StringToSet" />
-			</set>
-		</property>
-	</bean>
-
-
+	<bean id="stringToSet" class="com.yra.springpr.util.StringToSet" />
 </beans>

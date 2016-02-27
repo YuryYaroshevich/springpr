@@ -11,6 +11,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.yra.springpr.aop.event.EventRequestAspect;
+import com.yra.springpr.aop.event.EventRequestType;
 import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Booking;
 import com.yra.springpr.model.Event;
@@ -58,6 +60,12 @@ public class Runner {
 		System.out.println(tickets);
 		List<Ticket> userTickets = userService.getBookedTickets(user);
 		System.out.println(userTickets);
+		
+		System.out.println("---- AOP OUTPUT ----");
+		EventRequestAspect eventRequestAspect = ctx.getBean(EventRequestAspect.class);
+		System.out.println(eventRequestAspect.getCounter(EventRequestType.BY_NAME));
+		System.out.println(eventRequestAspect.getCounter(EventRequestType.BOOK_TICKET));
+		System.out.println(eventRequestAspect.getCounter(EventRequestType.TICKET_PRICE));
 		
 		ctx.close();
 	}

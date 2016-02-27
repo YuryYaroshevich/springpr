@@ -3,49 +3,25 @@ package com.yra.springpr.service;
 import java.util.Date;
 import java.util.List;
 
-import com.yra.springpr.dao.EventDao;
 import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Event;
 import com.yra.springpr.model.EventTimetable;
 import com.yra.springpr.model.Rating;
 
-public class EventService {
-    private EventDao eventDao;
+public interface EventService {
 
-    public EventService(EventDao eventDao) {
-        this.eventDao = eventDao;
-    }
+    Event create(String name, List<Date> dates, double price, Rating rating);
 
-    public Event create(String name, List<Date> dates, double price,
-            Rating rating) {
-        Event event = new Event(name, rating, price);
-        eventDao.save(event, dates);
-        return event;
-    }
+    void remove(Event event);
 
-    public void remove(Event event) {
-        eventDao.remove(event);
-    }
+    Event getByName(String name);
 
-    public Event getByName(String name) {
-        return eventDao.getByName(name);
-    }
+    List<Event> getAll();
 
-    public List<Event> getAll() {
-        return eventDao.getAll();
-    }
+    List<Event> getForDateRange(Date from, Date to);
 
-    public List<Event> getForDateRange(Date from, Date to) {
-        return eventDao.getForDateRange(from, to);
-    }
+    List<Event> getNextEvents(Date to);
 
-    public List<Event> getNextEvents(Date to) {
-        return eventDao.getNextEvents(to);
-    }
-
-    public void assignAuditorium(EventTimetable eventTimetable,
-            Auditorium auditorium) {
-        eventDao.assignAuditorium(eventTimetable, auditorium);
-    }
+    void assignAuditorium(EventTimetable eventTimetable, Auditorium auditorium);
 
 }

@@ -6,7 +6,9 @@ import java.util.Map;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 
+import com.yra.springpr.model.Booking;
 import com.yra.springpr.model.Event;
 
 @Aspect
@@ -25,7 +27,11 @@ public class EventRequestAspect {
         return countEventRequest(joinPoint, EventRequestType.BY_NAME);
     }
     
-    @Around("execution(* com.yra.springpr.service)")
+    @Before("execution(* com.yra.springpr.service.BookingService.getTicketPrice(com.yra.springpr.model.Booking, *)) && args(booking)")
+    public void countEventPriceRequest(Booking booking) {
+        Event event = booking.getEventTimetable().getEvent();
+        eventRequestStatistics.get(EventRequestType.TICKET_PRICE).countRequest(event);
+    }
     
     private Event countEventRequest(ProceedingJoinPoint joinPoint, EventRequestType type) {
         try {

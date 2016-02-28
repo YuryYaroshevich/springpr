@@ -9,6 +9,6 @@
  		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
  	
     <aop:aspectj-autoproxy />
-    <bean class="com.yra.springpr.aop.event.EventByNameRequestAspect" />	
+    <bean class="com.yra.springpr.aop.event.EventRequestAspect" />	
     
  </beans>

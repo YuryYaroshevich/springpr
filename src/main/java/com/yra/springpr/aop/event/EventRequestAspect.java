@@ -24,23 +24,28 @@ public class EventRequestAspect {
     
     @Around("execution(* com.yra.springpr.service.EventService.getByName(..))")
     public Event countEventByNameRequest(ProceedingJoinPoint joinPoint) {
-        return countEventRequest(joinPoint, EventRequestType.BY_NAME);
-    }
-    
-    @Before("execution(* com.yra.springpr.service.BookingService.getTicketPrice(com.yra.springpr.model.Booking, *)) && args(booking)")
-    public void countEventPriceRequest(Booking booking) {
-        Event event = booking.getEventTimetable().getEvent();
-        eventRequestStatistics.get(EventRequestType.TICKET_PRICE).countRequest(event);
-    }
-    
-    private Event countEventRequest(ProceedingJoinPoint joinPoint, EventRequestType type) {
-        try {
+    	try {
             Event event = (Event) joinPoint.proceed();
-            eventRequestStatistics.get(type).countRequest(event);
+            eventRequestStatistics.get(EventRequestType.BY_NAME).countRequest(event);
             return event;
         } catch (Throwable e) {
             throw new RuntimeException(e);
-        } 
+        }
+    }
+    
+    @Before("execution(* com.yra.springpr.service.BookingService.getTicketPrice(com.yra.springpr.model.Booking, *)) && args(booking, *)")
+    public void countEventPriceRequest(Booking booking) {
+        countEventRequest(booking, EventRequestType.TICKET_PRICE);
+    }
+    
+    @Before("execution(* com.yra.springpr.service.BookingService.bookTicket(*, com.yra.springpr.model.Booking)) && args(*, booking)")
+    public void countEventBookingRequest(Booking booking) {
+    	countEventRequest(booking, EventRequestType.BOOK_TICKET);
+    }
+    
+    private void countEventRequest(Booking booking, EventRequestType type) {
+    	Event event = booking.getEventTimetable().getEvent();
+        eventRequestStatistics.get(type).countRequest(event);
     }
 
     public Map<Event, Integer> getCounter(EventRequestType type) {

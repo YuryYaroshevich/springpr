@@ -64,8 +64,8 @@ public class Runner {
 		System.out.println("---- AOP OUTPUT ----");
 		EventRequestAspect eventRequestAspect = ctx.getBean(EventRequestAspect.class);
 		System.out.println(eventRequestAspect.getCounter(EventRequestType.BY_NAME));
-		System.out.println(eventRequestAspect.getCounter(EventRequestType.BOOK_TICKET));
 		System.out.println(eventRequestAspect.getCounter(EventRequestType.TICKET_PRICE));
+		System.out.println(eventRequestAspect.getCounter(EventRequestType.BOOK_TICKET));		
 		
 		ctx.close();
 	}

@@ -18,7 +18,8 @@
  		<bean id="auditoriumService" class="com.yra.springpr.service.AuditoriumService" c:auditoriums-ref="auditoriums" />
  		
  		<bean id="bookingService" class="com.yra.springpr.service.BookingServiceImpl"
- 			c:discountService-ref="discountService" c:bookingDao-ref="bookingDao" c:eventDao-ref="eventDao" />
+ 			c:discountService-ref="discountService" c:bookingDao-ref="bookingDao" c:eventDao-ref="eventDao"
+ 			c:userDao-ref="userDao" />
  			
 		<bean id="eventService" class="com.yra.springpr.service.EventServiceImpl" c:eventDao-ref="eventDao" />
 

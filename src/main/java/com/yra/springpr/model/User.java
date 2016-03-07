@@ -8,11 +8,13 @@ public class User {
     private final String name;
     private final String email;
     private final Date dateOfBirth;
+    private Purse purse;
 
-    public User(String name, String email, Date dateOfBirth) {
+    public User(String name, String email, Date dateOfBirth, Purse purse) {
         this.name = name;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
+        this.purse = purse;
     }
 
     public String getId() {
@@ -31,6 +33,10 @@ public class User {
         return dateOfBirth;
     }
 
+    public Purse getPurse() {
+        return purse;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -40,6 +46,7 @@ public class User {
         result = prime * result + ((email == null) ? 0 : email.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((purse == null) ? 0 : purse.hashCode());
         return result;
     }
 
@@ -72,12 +79,17 @@ public class User {
                 return false;
         } else if (!name.equals(other.name))
             return false;
+        if (purse == null) {
+            if (other.purse != null)
+                return false;
+        } else if (!purse.equals(other.purse))
+            return false;
         return true;
     }
 
     @Override
     public String toString() {
         return "User [id=" + id + ", name=" + name + ", email=" + email
-                + ", dateOfBirth=" + dateOfBirth + "]";
+                + ", dateOfBirth=" + dateOfBirth + ", purse=" + purse + "]";
     }
 }

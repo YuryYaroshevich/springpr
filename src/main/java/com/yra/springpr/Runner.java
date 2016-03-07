@@ -18,6 +18,7 @@ import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Booking;
 import com.yra.springpr.model.Event;
 import com.yra.springpr.model.EventTimetable;
+import com.yra.springpr.model.Purse;
 import com.yra.springpr.model.Rating;
 import com.yra.springpr.model.Ticket;
 import com.yra.springpr.model.User;
@@ -35,7 +36,7 @@ public class Runner {
 		ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
 		
 		UserService userService = ctx.getBean("userService", UserService.class);
-		User user = new User("Batman Batmanovich", "batman@epam.com", dateFormatter.parse("03/07/1992"));
+		User user = new User("Batman Batmanovich", "batman@epam.com", dateFormatter.parse("03/07/1992"), new Purse(23.5));
 		userService.register(user);
 		
 		EventService eventService = ctx.getBean("eventService", EventService.class);

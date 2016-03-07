@@ -12,5 +12,8 @@
     
     <bean class="com.yra.springpr.aop.event.EventRequestAspect" />	
     <bean class="com.yra.springpr.aop.discount.DiscountCounterAspect" />
+    <bean class="com.yra.springpr.aop.discount.LuckyWinnerAspect">
+        <constructor-arg ref="bookingDao" />
+    </bean>
     
  </beans>

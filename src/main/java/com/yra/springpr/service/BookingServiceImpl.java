@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.yra.springpr.dao.BookingDao;
 import com.yra.springpr.dao.EventDao;
+import com.yra.springpr.dao.UserDao;
 import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Booking;
 import com.yra.springpr.model.EventTimetable;
@@ -17,12 +18,14 @@ public class BookingServiceImpl implements BookingService {
     private DiscountService discountService;
     private BookingDao bookingDao;
     private EventDao eventDao;
+    private UserDao userDao;
 
     public BookingServiceImpl(DiscountService discountService,
-            BookingDao bookingDao, EventDao eventDao) {
+            BookingDao bookingDao, EventDao eventDao, UserDao userDao) {
         this.discountService = discountService;
         this.bookingDao = bookingDao;
         this.eventDao = eventDao;
+        this.userDao = userDao;
     }
 
     @Override
@@ -43,6 +46,8 @@ public class BookingServiceImpl implements BookingService {
     public void bookTicket(User user, Booking booking) {
         bookingDao.checkFreeSeats(booking.getEventTimetable(),
                 booking.getSeats());
+        user.getPurse().decrease(getTicketPrice(booking, user));
+        userDao.save(user);
         bookingDao.book(booking.getEventTimetable(), user, booking.getSeats());
     }
 

@@ -11,6 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.yra.springpr.aop.discount.DiscountCounterAspect;
 import com.yra.springpr.aop.event.EventRequestAspect;
 import com.yra.springpr.aop.event.EventRequestType;
 import com.yra.springpr.model.Auditorium;
@@ -34,7 +35,7 @@ public class Runner {
 		ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
 		
 		UserService userService = ctx.getBean("userService", UserService.class);
-		User user = new User("Batman Batmanovich", "batman@epam.com", dateFormatter.parse("02/17/1992"));
+		User user = new User("Batman Batmanovich", "batman@epam.com", dateFormatter.parse("03/07/1992"));
 		userService.register(user);
 		
 		EventService eventService = ctx.getBean("eventService", EventService.class);
@@ -65,7 +66,11 @@ public class Runner {
 		EventRequestAspect eventRequestAspect = ctx.getBean(EventRequestAspect.class);
 		System.out.println(eventRequestAspect.getCounter(EventRequestType.BY_NAME));
 		System.out.println(eventRequestAspect.getCounter(EventRequestType.TICKET_PRICE));
-		System.out.println(eventRequestAspect.getCounter(EventRequestType.BOOK_TICKET));		
+		System.out.println(eventRequestAspect.getCounter(EventRequestType.BOOK_TICKET));
+		
+		DiscountCounterAspect discountCounterAspect = ctx.getBean(DiscountCounterAspect.class);
+		System.out.println(discountCounterAspect.getTotalUsageCounter());
+		System.out.println(discountCounterAspect.getDiscountUserUsageCounter());
 		
 		ctx.close();
 	}

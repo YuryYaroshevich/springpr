@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet author="liquibase-docs" id="sqlFile-example">
+		<sqlFile encoding="utf8" path="create_user.sql" relativeToChangelogFile="true"/>
+	</changeSet>
+
+	<changeSet id="create_event_table" author="Yury.Yaroshevich">
+		<createTable tableName="event">
+			<column name="event_id" type="int">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="rating" type="varchar(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="base_price" type="double">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="auto_increment_id" author="Yury.Yaroshevich">
+		<addAutoIncrement columnDataType="int" columnName="event_id"
+			incrementBy="1" schemaName="spring_pr" startWith="1" tableName="event" />
+	</changeSet>
+</databaseChangeLog>

@@ -5,7 +5,8 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
 	<changeSet author="liquibase-docs" id="sqlFile-example">
-		<sqlFile encoding="utf8" path="create_user.sql" relativeToChangelogFile="true"/>
+		<sqlFile encoding="utf8" path="create_user.sql"
+			relativeToChangelogFile="true" />
 	</changeSet>
 
 	<changeSet id="create_event_table" author="Yury.Yaroshevich">
@@ -28,5 +29,30 @@
 	<changeSet id="auto_increment_id" author="Yury.Yaroshevich">
 		<addAutoIncrement columnDataType="int" columnName="event_id"
 			incrementBy="1" schemaName="spring_pr" startWith="1" tableName="event" />
+	</changeSet>
+
+	<changeSet id="create_user_table" author="Yury.Yaroshevich">
+		<createTable tableName="user">
+			<column name="user_id" type="int">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="email" type="varchar(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="birth_date" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="money" type="double">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="user_id_autoincrement" author="Yury.Yaroshevich">
+		<addAutoIncrement columnDataType="int" columnName="user_id"
+			incrementBy="1" schemaName="spring_pr" startWith="1" tableName="user" />
 	</changeSet>
 </databaseChangeLog>

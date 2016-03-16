@@ -5,8 +5,26 @@
  		http://www.springframework.org/schema/beans
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
  		
-    <bean id="userDao" class="com.yra.springpr.dao.UserDaoMemoryImpl" />
+    <!-- <bean id="userDao" class="com.yra.springpr.dao.UserDaoMemoryImpl" /> -->
     <bean id="eventDao" class="com.yra.springpr.dao.EventDaoMemoryImpl" />
     <bean id="bookingDao" class="com.yra.springpr.dao.BookingDaoMemoryImpl" />
+    
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="${jdbc.driverClassName}" />
+    	<property name="url" value="${jdbc.url}" />
+    	<property name="username" value="${jdbc.user}" />
+    	<property name="password" value="${jdbc.password}" />
+    </bean>
+    
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+    	<constructor-arg ref="dataSource" />
+    </bean>
+    
+    <bean id="userDao" class="com.yra.springpr.dao.UserDaoSpringJdbcImpl">
+    	<constructor-arg ref="jdbcTemplate" />
+    	<constructor-arg ref="auditoriumService" />
+    </bean>
+    
+    
     
 </beans>

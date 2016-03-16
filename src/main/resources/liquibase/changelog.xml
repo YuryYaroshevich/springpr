@@ -55,4 +55,47 @@
 		<addAutoIncrement columnDataType="int" columnName="user_id"
 			incrementBy="1" schemaName="spring_pr" startWith="1" tableName="user" />
 	</changeSet>
+	
+	<changeSet id="create_timetable_table" author="Yury.Yaroshevich">
+		<createTable tableName="timetable">
+			<column name="timetable_id" type="int">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="event_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="event_date" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="auditorium_id" type="int">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="timetable_id_autoincrement" author="Yury.Yaroshevich">
+		<addAutoIncrement columnDataType="int" columnName="timetable_id"
+			incrementBy="1" schemaName="spring_pr" startWith="1" tableName="timetable" />
+	</changeSet>
+	
+	<changeSet id="create_foreign_key_from_event_id" author="Yury.Yaroshevich">
+		<addForeignKeyConstraint baseColumnNames="event_id" baseTableName="timetable"
+			constraintName="fk_timetable_event" referencedColumnNames="event_id" referencedTableName="event" />
+	</changeSet>
+	
+	<changeSet id="create_booking_table" author="Yury.Yaroshevich">
+		<createTable tableName="booking">
+			<column name="user_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="timetable_id" type="int">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="user_id" baseTableName="booking"
+			constraintName="fk_booking_user" referencedColumnNames="user_id" referencedTableName="user" />
+		<addForeignKeyConstraint baseColumnNames="timetable_id" baseTableName="booking"
+			constraintName="fk_booking_timetable" referencedColumnNames="timetable_id" referencedTableName="timetable" />	
+	</changeSet>
+	
 </databaseChangeLog>

@@ -16,8 +16,8 @@ import com.yra.springpr.model.User;
 /*
  * user:,
  event:,
- event_timetable: event id, date, auditorium id,
- booking: user_id, event_holding_id, place_id; here event_holding_id it is foreign composite key(event id, date).
+ event_timetable: timetable_id, event id, date, auditorium id,
+ booking: user_id, timetable_id; here event_holding_id it is foreign composite key(event id, date).
  * */
 
 public class BookingDaoMemoryImpl implements BookingDao {

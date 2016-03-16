@@ -26,7 +26,7 @@ public class UserDaoSpringJdbcImpl implements UserDao {
 		paramMap.put("email", user.getEmail());
 		paramMap.put("birth_date", new Date(user.getDateOfBirth().getTime()));
 		paramMap.put("money", user.getPurse().getBalance());
-		jdbcTemplate.update("insert into user values(:name,:email,:birth_date,:money)", paramMap);
+		jdbcTemplate.update("insert into user(name,email,birth_date,money) values(:name,:email,:birth_date,:money)", paramMap);
 	}
 
 	@Override
@@ -50,5 +50,4 @@ public class UserDaoSpringJdbcImpl implements UserDao {
 		return new User(rs.getInt("user_id"), rs.getString("name"), rs.getString("email"), 
 				rs.getDate("birth_date"), new Purse(rs.getDouble("money")));
 	}
-
 }

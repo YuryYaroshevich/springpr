@@ -98,4 +98,14 @@
 			constraintName="fk_booking_timetable" referencedColumnNames="timetable_id" referencedTableName="timetable" />	
 	</changeSet>
 	
+	<changeSet id="nullable_auditorium_id" author="Yury.Yaroshevich">
+		<dropNotNullConstraint columnDataType="int" columnName="auditorium_id" tableName="timetable" />
+	</changeSet>
+	
+	<changeSet id="place_id_column" author="Yury.Yaroshevich">
+		<addColumn tableName="booking">
+			<column name="place_id" type="int" />
+		</addColumn>
+	</changeSet>
+	
 </databaseChangeLog>

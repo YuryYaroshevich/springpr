@@ -3,6 +3,7 @@ package com.yra.springpr.model;
 import java.util.Date;
 
 public class EventTimetable {
+	private int id;
     private Event event;
     private Date date;
 
@@ -10,8 +11,12 @@ public class EventTimetable {
         this.event = event;
         this.date = date;
     }
+    
+    public int getId() {
+		return id;
+	}
 
-    public Event getEvent() {
+	public Event getEvent() {
         return event;
     }
 

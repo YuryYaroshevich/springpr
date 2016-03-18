@@ -66,33 +66,42 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 
 	@Override
 	public Event getByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> params = new HashMap<>();
+		params.put("name", name);
+		return jdbcTemplate.queryForObject("select * from event where name = :name", Event.class, params);
 	}
 
 	@Override
 	public List<Event> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return jdbcTemplate.queryForList("select * from event", Event.class, new Object[] {});
 	}
 
 	@Override
 	public List<Event> getForDateRange(Date from, Date to) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> params = new HashMap<>();
+		params.put("from", from);
+		params.put("to", to);
+		return jdbcTemplate.queryForList(
+				"select distinct event_id, name, rating, base_price from event e inner join timetable t on e.event_id = t.event_id where event_date >= :from and event_date <= :to ",
+				 Event.class, params);
 	}
 
 	@Override
 	public List<Event> getNextEvents(Date to) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> params = new HashMap<>();
+		params.put("to", to);
+		return jdbcTemplate.queryForList("select distinct event_id, name, rating, base_price from event e inner join timetable t on e.event_id = t.event_id where event_date <= :to",
+				Event.class, params);
 	}
 
 	@Override
 	public void assignAuditorium(EventTimetable eventTimetable,
 			Auditorium auditorium) {
-		// TODO Auto-generated method stub
-		
+		Map<String, Object> params = new HashMap<>();
+		params.put("event_id", eventTimetable.getEvent().getId());
+		params.put("date", eventTimetable.getDate());
+		params.put("auditorium_id", auditorium.getId());
+		jdbcTemplate.update("update timetable set auditorium_id = :auditorium_id where event_date = date and event_id = :event_id", params);
 	}
 
 }

@@ -5,9 +5,9 @@
  		http://www.springframework.org/schema/beans
  		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
  		
-    <!-- <bean id="userDao" class="com.yra.springpr.dao.UserDaoMemoryImpl" /> -->
+    <!-- <bean id="userDao" class="com.yra.springpr.dao.UserDaoMemoryImpl" /> 
     <bean id="eventDao" class="com.yra.springpr.dao.EventDaoMemoryImpl" />
-    <bean id="bookingDao" class="com.yra.springpr.dao.BookingDaoMemoryImpl" />
+    <bean id="bookingDao" class="com.yra.springpr.dao.BookingDaoMemoryImpl" />-->
     
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     	<property name="driverClassName" value="${jdbc.driverClassName}" />
@@ -21,10 +21,17 @@
     </bean>
     
     <bean id="userDao" class="com.yra.springpr.dao.UserDaoSpringJdbcImpl">
+    	<constructor-arg ref="jdbcTemplate" />    	
+    </bean>
+    
+    <bean id="eventDao" class="com.yra.springpr.dao.EventDaoSpringJdbcImpl">
     	<constructor-arg ref="jdbcTemplate" />
     	<constructor-arg ref="auditoriumService" />
     </bean>
     
+    <bean id="bookingDao" class="com.yra.springpr.dao.BookingDaoSpringJdbcImpl">
+    	<constructor-arg ref="jdbcTemplate" />
+    </bean>
     
     
 </beans>

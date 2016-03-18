@@ -1,6 +1,7 @@
 package com.yra.springpr.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +14,9 @@ import java.util.stream.Collectors;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.yra.springpr.model.Event;
 import com.yra.springpr.model.EventTimetable;
+import com.yra.springpr.model.Rating;
 import com.yra.springpr.model.Ticket;
 import com.yra.springpr.model.User;
 
@@ -72,7 +75,14 @@ public class BookingDaoSpringJdbcImpl implements BookingDao {
     public List<Ticket> getBooked(User user) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("user_id", user.getId());
-		jdbcTemplate.queryForList("select * from booking b inner join timetable t on b.timetable_id = t.timetable_id inner join event e on t.event_id = e.event_id where b.user_id = :user_id", params);
-		return null;
+		return jdbcTemplate.query("select e.event_id,e.name,e.rating,e.base_price,t.event_date, b.place_id from booking b inner join timetable t on b.timetable_id = t.timetable_id inner join event e on t.event_id = e.event_id where b.user_id = :user_id", 
+				this::mapTicket, params);
+	}
+
+	private Ticket mapTicket(ResultSet rs, int i) throws SQLException {
+		Event event = new Event(rs.getInt("event_id"), rs.getString("name"), 
+				Rating.valueOf(rs.getString("rating")), rs.getDouble("base_price"));
+		EventTimetable eventTimetable = new EventTimetable(event, rs.getDate("event_date"));
+		return new Ticket(eventTimetable, rs.getInt("place_id"));
 	}
 }

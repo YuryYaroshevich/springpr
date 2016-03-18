@@ -1,6 +1,7 @@
 package com.yra.springpr.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Event;
 import com.yra.springpr.model.EventTimetable;
+import com.yra.springpr.model.Rating;
 import com.yra.springpr.service.AuditoriumService;
 
 public class EventDaoSpringJdbcImpl implements EventDao {
@@ -68,12 +70,12 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 	public Event getByName(String name) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("name", name);
-		return jdbcTemplate.queryForObject("select * from event where name = :name", Event.class, params);
+		return jdbcTemplate.queryForObject("select * from event where name = :name", this::mapEvent, params);
 	}
 
 	@Override
 	public List<Event> getAll() {
-		return jdbcTemplate.queryForList("select * from event", Event.class, new Object[] {});
+		return jdbcTemplate.query("select * from event", this::mapEvent, new Object[] {});
 	}
 
 	@Override
@@ -81,17 +83,17 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 		Map<String, Object> params = new HashMap<>();
 		params.put("from", from);
 		params.put("to", to);
-		return jdbcTemplate.queryForList(
+		return jdbcTemplate.query(
 				"select distinct event_id, name, rating, base_price from event e inner join timetable t on e.event_id = t.event_id where event_date >= :from and event_date <= :to ",
-				 Event.class, params);
+				 this::mapEvent, params);
 	}
 
 	@Override
 	public List<Event> getNextEvents(Date to) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("to", to);
-		return jdbcTemplate.queryForList("select distinct event_id, name, rating, base_price from event e inner join timetable t on e.event_id = t.event_id where event_date <= :to",
-				Event.class, params);
+		return jdbcTemplate.query("select distinct event_id, name, rating, base_price from event e inner join timetable t on e.event_id = t.event_id where event_date <= :to",
+				this::mapEvent, params);
 	}
 
 	@Override
@@ -102,6 +104,11 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 		params.put("date", eventTimetable.getDate());
 		params.put("auditorium_id", auditorium.getId());
 		jdbcTemplate.update("update timetable set auditorium_id = :auditorium_id where event_date = date and event_id = :event_id", params);
+	}
+	
+	private Event mapEvent(ResultSet rs, int i) throws SQLException {
+		return new Event(rs.getInt("id"), rs.getString("name"), 
+				Rating.valueOf(rs.getString("rating")), rs.getDouble("base_price"));
 	}
 
 }

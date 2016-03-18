@@ -13,7 +13,14 @@ public class Event {
         this.basePrice = basePrice;
     }
 
-    public int getId() {
+    public Event(int id, String name, Rating rating, double basePrice) {
+		this.id = id;
+		this.name = name;
+		this.rating = rating;
+		this.basePrice = basePrice;
+	}
+    
+	public int getId() {
         return id;
     }
 

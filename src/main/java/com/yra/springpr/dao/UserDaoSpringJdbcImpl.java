@@ -3,6 +3,7 @@ package com.yra.springpr.dao;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,8 +32,7 @@ public class UserDaoSpringJdbcImpl implements UserDao {
 
 	@Override
 	public void remove(User user) {
-		Map<String, Object> paramMap = new HashMap<>();
-		paramMap.put("id", user.getId());
+		Map<String, Object> paramMap = Collections.singletonMap("id", user.getId());
 		jdbcTemplate.update("delete from user where id = :id", paramMap);
 	}
 

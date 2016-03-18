@@ -3,6 +3,7 @@ package com.yra.springpr.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,16 +61,14 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 
 	@Override
 	public void remove(Event event) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("id", event.getId());
+		Map<String, Object> params = Collections.singletonMap("id", event.getId());
 		jdbcTemplate.update("delete from event where event_id = :id", params);		
 		jdbcTemplate.update("delete from timetable where event_id = :id", params);
 	}
 
 	@Override
 	public Event getByName(String name) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("name", name);
+		Map<String, Object> params = Collections.singletonMap("name", name);
 		return jdbcTemplate.queryForObject("select * from event where name = :name", this::mapEvent, params);
 	}
 
@@ -90,8 +89,7 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 
 	@Override
 	public List<Event> getNextEvents(Date to) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("to", to);
+		Map<String, Object> params = Collections.singletonMap("to", to);
 		return jdbcTemplate.query("select distinct event_id, name, rating, base_price from event e inner join timetable t on e.event_id = t.event_id where event_date <= :to",
 				this::mapEvent, params);
 	}

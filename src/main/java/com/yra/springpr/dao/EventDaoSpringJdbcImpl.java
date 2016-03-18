@@ -11,6 +11,8 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Event;
@@ -37,11 +39,12 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 
 	@Override
 	public void save(Event event, List<Date> dates) {
-		Map<String, Object> params = new HashMap<>();
+		/*Map<String, Object> params = new HashMap<>();
 		params.put("name", event.getName());
 		params.put("rating", event.getRating());
-		params.put("base_price", event.getBasePrice());
-		jdbcTemplate.update("insert into event(name,rating,base_price) values(:name,:rating,:base_price)", params);
+		params.put("base_price", event.getBasePrice());*/
+		SqlParameterSource namedParams = new BeanPropertySqlParameterSource(event);
+		jdbcTemplate.update("insert into event(name,rating,base_price) values(:name,:rating,:base_price)", namedParams);
 		
 		jdbcTemplate.batchUpdate("insert into timetable(event_id, event_date) values(?,?)",
 				new BatchPreparedStatementSetter() {

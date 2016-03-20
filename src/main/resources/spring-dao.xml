@@ -20,18 +20,15 @@
     	<constructor-arg ref="dataSource" />
     </bean>
     
-    <bean id="userDao" class="com.yra.springpr.dao.UserDaoSpringJdbcImpl">
-    	<constructor-arg ref="jdbcTemplate" />    	
+    <bean id="abstractDao" abstract="true">
+        <constructor-arg ref="jdbcTemplate" />
     </bean>
     
-    <bean id="eventDao" class="com.yra.springpr.dao.EventDaoSpringJdbcImpl">
-    	<constructor-arg ref="jdbcTemplate" />
+    <bean id="userDao" class="com.yra.springpr.dao.UserDaoSpringJdbcImpl" parent="abstractDao" />
+    <bean id="eventDao" class="com.yra.springpr.dao.EventDaoSpringJdbcImpl" parent="abstractDao">
     	<constructor-arg ref="auditoriumService" />
-    </bean>
-    
-    <bean id="bookingDao" class="com.yra.springpr.dao.BookingDaoSpringJdbcImpl">
-    	<constructor-arg ref="jdbcTemplate" />
-    </bean>
-    
+    </bean>    
+    <bean id="bookingDao" class="com.yra.springpr.dao.BookingDaoSpringJdbcImpl" parent="abstractDao" />
+    <bean id="timetableDao" class="com.yra.springpr.dao.TimetableDaoSpringJdbcImpl" parent="abstractDao" />
     
 </beans>

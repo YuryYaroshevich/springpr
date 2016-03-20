@@ -6,7 +6,7 @@ import java.util.Map;
 import com.yra.springpr.model.User;
 
 public class UserDaoMemoryImpl implements UserDao {
-    private Map<String, User> storage = new HashMap<>();
+    private Map<Long, User> storage = new HashMap<>();
 
     @Override
     public void save(User user) {
@@ -31,5 +31,11 @@ public class UserDaoMemoryImpl implements UserDao {
             }
         }
         return null;
+    }
+
+    @Override
+    public void update(User user) {
+        // TODO Auto-generated method stub
+        
     }
 }

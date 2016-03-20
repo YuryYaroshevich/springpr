@@ -1,18 +1,18 @@
 package com.yra.springpr.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Event;
@@ -21,10 +21,10 @@ import com.yra.springpr.model.Rating;
 import com.yra.springpr.service.AuditoriumService;
 
 public class EventDaoSpringJdbcImpl implements EventDao {
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate jdbcTemplate;
 	private AuditoriumService auditoriumService;
 	
-	public EventDaoSpringJdbcImpl(JdbcTemplate jdbcTemplate,
+	public EventDaoSpringJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate,
 			AuditoriumService auditoriumService) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.auditoriumService = auditoriumService;
@@ -32,34 +32,27 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 
 	@Override
 	public Auditorium getAuditorium(EventTimetable eventTimetable) {		
-		int auditoriumId = jdbcTemplate.queryForObject("select auditorium_id from timetable where id = ?", 
-				Integer.class, eventTimetable.getEvent().getId());
+	    Map<String, Object> param = Collections.singletonMap("timetable_id", eventTimetable.getId());
+		int auditoriumId = jdbcTemplate.queryForObject("select auditorium_id from timetable where timetable_id = :timetable_id", 
+		        param, Integer.class);
 		return auditoriumService.getAuditoriumById(auditoriumId);
 	}
 
 	@Override
 	public void save(Event event, List<Date> dates) {
-		/*Map<String, Object> params = new HashMap<>();
-		params.put("name", event.getName());
-		params.put("rating", event.getRating());
-		params.put("base_price", event.getBasePrice());*/
-		SqlParameterSource namedParams = new BeanPropertySqlParameterSource(event);
-		jdbcTemplate.update("insert into event(name,rating,base_price) values(:name,:rating,:base_price)", namedParams);
+	    BeanPropertySqlParameterSource eventParams = new BeanPropertySqlParameterSource(event);
+	    eventParams.registerSqlType("rating", Types.VARCHAR);
+	    GeneratedKeyHolder eventIdHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update("insert into event(name,rating,base_price) values(:name,:rating,:basePrice)", eventParams, eventIdHolder);
+		event.setId((Long) eventIdHolder.getKey());
 		
-		jdbcTemplate.batchUpdate("insert into timetable(event_id, event_date) values(?,?)",
-				new BatchPreparedStatementSetter() {
-					@Override
-					public int getBatchSize() {
-						return dates.size();
-					}
-
-					@Override
-					public void setValues(PreparedStatement ps, int i)
-							throws SQLException {
-						ps.setInt(1, event.getId());
-						ps.setDate(2, new java.sql.Date(dates.get(i).getTime()));
-					}
-		});
+		MapSqlParameterSource[] timetableParams = new MapSqlParameterSource[dates.size()];
+		for (int i = 0; i < dates.size(); i++) {
+		    timetableParams[i] = new MapSqlParameterSource();
+		    timetableParams[i].addValue("event_id", event.getId());
+		    timetableParams[i].addValue("event_date", new java.sql.Date(dates.get(i).getTime()));
+		}
+		jdbcTemplate.batchUpdate("insert into timetable(event_id, event_date) values(?,?)", timetableParams);
 	}
 
 	@Override
@@ -72,12 +65,12 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 	@Override
 	public Event getByName(String name) {
 		Map<String, Object> params = Collections.singletonMap("name", name);
-		return jdbcTemplate.queryForObject("select * from event where name = :name", this::mapEvent, params);
+		return jdbcTemplate.queryForObject("select * from event where name = :name", params, this::mapEvent);
 	}
 
 	@Override
 	public List<Event> getAll() {
-		return jdbcTemplate.query("select * from event", this::mapEvent, new Object[] {});
+		return jdbcTemplate.query("select * from event", this::mapEvent);
 	}
 
 	@Override
@@ -87,14 +80,14 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 		params.put("to", to);
 		return jdbcTemplate.query(
 				"select distinct event_id, name, rating, base_price from event e inner join timetable t on e.event_id = t.event_id where event_date >= :from and event_date <= :to ",
-				 this::mapEvent, params);
+				 params, this::mapEvent);
 	}
 
 	@Override
 	public List<Event> getNextEvents(Date to) {
 		Map<String, Object> params = Collections.singletonMap("to", to);
 		return jdbcTemplate.query("select distinct event_id, name, rating, base_price from event e inner join timetable t on e.event_id = t.event_id where event_date <= :to",
-				this::mapEvent, params);
+		        params, this::mapEvent);
 	}
 
 	@Override
@@ -111,5 +104,4 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 		return new Event(rs.getInt("id"), rs.getString("name"), 
 				Rating.valueOf(rs.getString("rating")), rs.getDouble("base_price"));
 	}
-
 }

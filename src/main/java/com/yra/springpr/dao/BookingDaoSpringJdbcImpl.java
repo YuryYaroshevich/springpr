@@ -1,18 +1,17 @@
 package com.yra.springpr.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.yra.springpr.model.Event;
 import com.yra.springpr.model.EventTimetable;
@@ -21,9 +20,9 @@ import com.yra.springpr.model.Ticket;
 import com.yra.springpr.model.User;
 
 public class BookingDaoSpringJdbcImpl implements BookingDao {
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate jdbcTemplate;
 		
-	public BookingDaoSpringJdbcImpl(JdbcTemplate jdbcTemplate) {
+	public BookingDaoSpringJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
@@ -32,7 +31,7 @@ public class BookingDaoSpringJdbcImpl implements BookingDao {
 		String seatNumbers = makeCommaSeparatedList(seats);
 		Map<String, Object> params = Collections.singletonMap("place_ids", seatNumbers);
 		List<Integer> occupiedPlaces = jdbcTemplate.queryForList("select place_id from booking where place_id in (:place_ids)", 
-			Integer.class, params);
+			params, Integer.class);
 		if (!occupiedPlaces.isEmpty()) {
 			throw new RuntimeException("Places " + 	makeCommaSeparatedList(occupiedPlaces) +
 					" are already occupied");
@@ -45,27 +44,20 @@ public class BookingDaoSpringJdbcImpl implements BookingDao {
     
 	@Override
     public void book(EventTimetable eventTimetable, User user, Set<Integer> seats) {
-		List<Integer> seatList = new ArrayList<>(seats);
-		jdbcTemplate.batchUpdate("insert into booking(user_id, timetable_id, place_id) values(?,?,?)", new BatchPreparedStatementSetter() {
-			@Override
-			public int getBatchSize() {
-				return seatList.size();
-			}
-
-			@Override
-			public void setValues(PreparedStatement ps, int i)
-					throws SQLException {
-				ps.setInt(1, user.getId());
-				ps.setInt(2, eventTimetable.getId());
-				ps.setInt(3, seatList.get(i));
-			}
-		});
+	    MapSqlParameterSource[] namedParams = new MapSqlParameterSource[seats.size()];
+	    Iterator<Integer> iter = seats.iterator();
+	    for (int i = 0; i < namedParams.length; i++) {
+	        namedParams[i] = new MapSqlParameterSource();
+	        namedParams[i].addValue("user_id", user.getId());
+	        namedParams[i].addValue("timetable_id", eventTimetable.getId(), iter.next());
+	    }
+		jdbcTemplate.batchUpdate("insert into booking(user_id, timetable_id, place_id) values(?,?,?)", namedParams);
 	}
     
 	@Override
     public List<Ticket> getBooked(EventTimetable eventTimetable) {
 		Map<String, Object> params = Collections.singletonMap("timetable_id", eventTimetable.getId());
-		List<Integer> places = jdbcTemplate.queryForList("select place_id from booking where timetable_id = :timetable_id", Integer.class, params);
+		List<Integer> places = jdbcTemplate.queryForList("select place_id from booking where timetable_id = :timetable_id", params, Integer.class);
 		return places.stream().map(place -> new Ticket(eventTimetable, place)).collect(Collectors.toList());
 	}
 
@@ -73,7 +65,7 @@ public class BookingDaoSpringJdbcImpl implements BookingDao {
     public List<Ticket> getBooked(User user) {
 		Map<String, Object> params = Collections.singletonMap("user_id", user.getId());
 		return jdbcTemplate.query("select e.event_id,e.name,e.rating,e.base_price,t.event_date, b.place_id from booking b inner join timetable t on b.timetable_id = t.timetable_id inner join event e on t.event_id = e.event_id where b.user_id = :user_id", 
-				this::mapTicket, params);
+				params, this::mapTicket);
 	}
 
 	private Ticket mapTicket(ResultSet rs, int i) throws SQLException {

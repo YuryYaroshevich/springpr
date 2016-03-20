@@ -44,10 +44,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public void bookTicket(User user, Booking booking) {
-        bookingDao.checkFreeSeats(booking.getEventTimetable(),
-                booking.getSeats());
-        user.getPurse().decrease(getTicketPrice(booking, user));
-        userDao.save(user);
+        bookingDao.checkFreeSeats(booking.getEventTimetable(), booking.getSeats());
+        user.setBalance(user.getBalance() - getTicketPrice(booking, user));
+        userDao.update(user);
         bookingDao.book(booking.getEventTimetable(), user, booking.getSeats());
     }
 

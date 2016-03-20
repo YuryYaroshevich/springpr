@@ -12,7 +12,7 @@ import com.yra.springpr.model.Event;
 import com.yra.springpr.model.EventTimetable;
 
 public class EventDaoMemoryImpl implements EventDao {
-    private Map<String, Event> eventStorage = new HashMap<>();
+    private Map<Long, Event> eventStorage = new HashMap<>();
     private Map<EventTimetable, Auditorium> timetable = new HashMap<>();
 
     @Override

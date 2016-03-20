@@ -25,5 +25,8 @@
 
 		<bean id="userService" class="com.yra.springpr.service.UserService"
 		    c:userDao-ref="userDao" c:bookingDao-ref="bookingDao" />
+		
+		<bean id="timetableService" class="com.yra.springpr.service.TimetableServiceImpl"
+		    c:timetableDao-ref="timetableDao" />
  		
 </beans>

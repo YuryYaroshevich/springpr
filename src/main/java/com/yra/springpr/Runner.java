@@ -18,13 +18,13 @@ import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Booking;
 import com.yra.springpr.model.Event;
 import com.yra.springpr.model.EventTimetable;
-import com.yra.springpr.model.Purse;
 import com.yra.springpr.model.Rating;
 import com.yra.springpr.model.Ticket;
 import com.yra.springpr.model.User;
 import com.yra.springpr.service.AuditoriumService;
 import com.yra.springpr.service.BookingService;
 import com.yra.springpr.service.EventService;
+import com.yra.springpr.service.TimetableService;
 import com.yra.springpr.service.UserService;
 
 
@@ -32,11 +32,11 @@ public class Runner {
 	private static DateFormat dateFormatter = new SimpleDateFormat("M/dd/yyyy");
 	private static DateFormat dateTimeFormatter = new SimpleDateFormat("M/dd/yyyy hh:mm:ss");
 	
-	public static void main(String[] args) throws ParseException {	    
+    public static void main(String[] args) throws ParseException {	    
 		ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
 		
 		UserService userService = ctx.getBean("userService", UserService.class);
-		User user = new User("Batman Batmanovich", "batman@epam.com", dateFormatter.parse("03/07/1992"), new Purse(23.5));
+		User user = new User("Batman Batmanovich", "batman@epam.com", dateFormatter.parse("03/07/1992"), 23.5);
 		userService.register(user);
 		
 		EventService eventService = ctx.getBean("eventService", EventService.class);
@@ -49,7 +49,14 @@ public class Runner {
 		
 		BookingService bookingService = ctx.getBean("bookingService", BookingService.class);
 		Event event = eventService.getByName("Survivor");
-		EventTimetable eventTimetable = new EventTimetable(event, dateTimeFormatter.parse("02/05/2016 19:00:00"));
+		TimetableService timetableService = ctx.getBean(TimetableService.class);
+		EventTimetable eventTimetable = null;
+		for (EventTimetable et : timetableService.getTimetable(event)) {
+		    if (et.getDate().equals(dateTimeFormatter.parse("02/05/2016 19:00:00"))) {
+		        eventTimetable = et;
+		        break;
+		    }
+		}
 		AuditoriumService auditoriumService = ctx.getBean("auditoriumService", AuditoriumService.class);
 		Auditorium auditorium = auditoriumService.getAuditoriumById(1);
 		eventService.assignAuditorium(eventTimetable, auditorium);

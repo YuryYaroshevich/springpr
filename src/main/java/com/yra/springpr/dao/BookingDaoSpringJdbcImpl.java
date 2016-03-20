@@ -49,9 +49,11 @@ public class BookingDaoSpringJdbcImpl implements BookingDao {
 	    for (int i = 0; i < namedParams.length; i++) {
 	        namedParams[i] = new MapSqlParameterSource();
 	        namedParams[i].addValue("user_id", user.getId());
-	        namedParams[i].addValue("timetable_id", eventTimetable.getId(), iter.next());
+	        namedParams[i].addValue("timetable_id", eventTimetable.getId());
+	        namedParams[i].addValue("place_id", iter.next());
 	    }
-		jdbcTemplate.batchUpdate("insert into booking(user_id, timetable_id, place_id) values(?,?,?)", namedParams);
+		jdbcTemplate.batchUpdate("insert into booking(user_id, timetable_id, place_id) values(:user_id,:timetable_id,:place_id)",
+		       namedParams);
 	}
     
 	@Override

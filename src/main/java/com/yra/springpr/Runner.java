@@ -14,6 +14,7 @@ import com.google.common.collect.Sets;
 import com.yra.springpr.aop.discount.DiscountCounterAspect;
 import com.yra.springpr.aop.event.EventRequestAspect;
 import com.yra.springpr.aop.event.EventRequestType;
+import com.yra.springpr.dao.util.DaoCleaner;
 import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Booking;
 import com.yra.springpr.model.Event;
@@ -34,6 +35,10 @@ public class Runner {
 	
     public static void main(String[] args) throws ParseException {	    
 		ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
+		
+		DaoCleaner daoCleaner = ctx.getBean(DaoCleaner.class);
+        List<String> tables = Lists.newArrayList("booking", "timetable", "event", "user");
+        daoCleaner.cleanTables(tables);
 		
 		UserService userService = ctx.getBean("userService", UserService.class);
 		User user = new User("Batman Batmanovich", "batman@epam.com", dateFormatter.parse("03/07/1992"), 23.5);

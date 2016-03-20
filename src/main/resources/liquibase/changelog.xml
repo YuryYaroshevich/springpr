@@ -108,4 +108,9 @@
 		</addColumn>
 	</changeSet>
 	
+	<changeSet id="event_date_to_datetime_type" author="Yury.Yaroshevich">
+	    <modifyDataType columnName="event_date"
+	        newDataType="datetime" tableName="timetable" />
+	</changeSet>
+	
 </databaseChangeLog>

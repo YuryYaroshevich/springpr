@@ -31,4 +31,6 @@
     <bean id="bookingDao" class="com.yra.springpr.dao.BookingDaoSpringJdbcImpl" parent="abstractDao" />
     <bean id="timetableDao" class="com.yra.springpr.dao.TimetableDaoSpringJdbcImpl" parent="abstractDao" />
     
+    <bean id="daoCleaner" class="com.yra.springpr.dao.util.DaoCleaner" parent="abstractDao" />
+    
 </beans>

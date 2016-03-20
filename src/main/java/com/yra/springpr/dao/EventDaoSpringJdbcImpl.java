@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,9 +49,10 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 		for (int i = 0; i < dates.size(); i++) {
 		    timetableParams[i] = new MapSqlParameterSource();
 		    timetableParams[i].addValue("event_id", event.getId());
-		    timetableParams[i].addValue("event_date", new java.sql.Date(dates.get(i).getTime()));
+		    timetableParams[i].addValue("event_date", new java.sql.Date(dates.get(i).getTime()), Types.TIMESTAMP);
 		}
-		jdbcTemplate.batchUpdate("insert into timetable(event_id, event_date) values(?,?)", timetableParams);
+		jdbcTemplate.batchUpdate("insert into timetable(event_id, event_date) values(:event_id, :event_date)",
+		       timetableParams);
 	}
 
 	@Override
@@ -75,9 +75,9 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 
 	@Override
 	public List<Event> getForDateRange(Date from, Date to) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("from", from);
-		params.put("to", to);
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("from", new java.sql.Date(from.getTime()), Types.TIMESTAMP);
+		params.addValue("to", new java.sql.Date(to.getTime()), Types.TIMESTAMP);
 		return jdbcTemplate.query(
 				"select distinct event_id, name, rating, base_price from event e inner join timetable t on e.event_id = t.event_id where event_date >= :from and event_date <= :to ",
 				 params, this::mapEvent);
@@ -93,15 +93,16 @@ public class EventDaoSpringJdbcImpl implements EventDao {
 	@Override
 	public void assignAuditorium(EventTimetable eventTimetable,
 			Auditorium auditorium) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("event_id", eventTimetable.getEvent().getId());
-		params.put("date", eventTimetable.getDate());
-		params.put("auditorium_id", auditorium.getId());
-		jdbcTemplate.update("update timetable set auditorium_id = :auditorium_id where event_date = date and event_id = :event_id", params);
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("event_id", eventTimetable.getEvent().getId());
+		params.addValue("date", new java.sql.Date(eventTimetable.getDate().getTime()), Types.TIMESTAMP);
+		params.addValue("auditorium_id", auditorium.getId());
+		jdbcTemplate.update("update timetable set auditorium_id = :auditorium_id where event_date = :date and event_id = :event_id",
+		       params);
 	}
 	
 	private Event mapEvent(ResultSet rs, int i) throws SQLException {
-		return new Event(rs.getInt("id"), rs.getString("name"), 
+		return new Event(rs.getInt("event_id"), rs.getString("name"), 
 				Rating.valueOf(rs.getString("rating")), rs.getDouble("base_price"));
 	}
 }

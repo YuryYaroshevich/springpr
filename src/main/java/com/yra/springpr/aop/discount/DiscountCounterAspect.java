@@ -7,13 +7,13 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
-import com.yra.springpr.aop.UsageCounter;
+import com.yra.springpr.aop.UsageCounterMemoryImpl;
 import com.yra.springpr.model.User;
 
 @Aspect
 public class DiscountCounterAspect {
-    private UsageCounter<Class<?>> discountTotalUsageCounter = new UsageCounter<>();
-    private Map<User, UsageCounter<Class<?>>> discountUserUsageCounter = new HashMap<>();
+    private UsageCounterMemoryImpl<Class<?>> discountTotalUsageCounter = new UsageCounterMemoryImpl<>();
+    private Map<User, UsageCounterMemoryImpl<Class<?>>> discountUserUsageCounter = new HashMap<>();
     
     @Around("execution(* com.yra.springpr.service.discount.DiscountStrategy.count(..))")
     public double countDiscountTypeUsage(ProceedingJoinPoint joinPoint) {
@@ -36,13 +36,13 @@ public class DiscountCounterAspect {
             double discount = (double) joinPoint.proceed();
             Class<?> discountStrategyClass = joinPoint.getTarget().getClass();
             if (discount > 0) {
-                UsageCounter<Class<?>> discountCounterForUser = discountUserUsageCounter.get(user);
+                UsageCounterMemoryImpl<Class<?>> discountCounterForUser = discountUserUsageCounter.get(user);
                 if (discountCounterForUser == null) {
-                    discountCounterForUser = new UsageCounter<Class<?>>();
+                    discountCounterForUser = new UsageCounterMemoryImpl<Class<?>>();
                     discountUserUsageCounter.put(user, discountCounterForUser);
                 }
                 discountCounterForUser.countObjectUsage(discountStrategyClass);
-            } 
+            }
             return discount;
         } catch (Throwable e) {
             throw new RuntimeException(e);
@@ -53,7 +53,7 @@ public class DiscountCounterAspect {
         return discountTotalUsageCounter.getCounter();
     }
     
-    public Map<User, UsageCounter<Class<?>>> getDiscountUserUsageCounter() {
+    public Map<User, UsageCounterMemoryImpl<Class<?>>> getDiscountUserUsageCounter() {
         return discountUserUsageCounter;
     }
 }

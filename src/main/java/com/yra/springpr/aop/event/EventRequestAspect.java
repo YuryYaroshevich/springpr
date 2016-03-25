@@ -1,33 +1,26 @@
 package com.yra.springpr.aop.event;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
-import com.yra.springpr.aop.UsageCounter;
 import com.yra.springpr.model.Booking;
 import com.yra.springpr.model.Event;
 
 @Aspect
 public class EventRequestAspect {
-    private Map<EventRequestType, UsageCounter<Event>> eventRequestStatistics;
+    private EventUsageCounter eventUsageCounter = new EventUsageCounterMemoryImpl();
     
-    public EventRequestAspect() {
-        eventRequestStatistics = new EnumMap<>(EventRequestType.class);
-        for (EventRequestType type : EventRequestType.values()) {
-            eventRequestStatistics.put(type, new UsageCounter<Event>());
-        }
+    public EventRequestAspect(EventUsageCounter eventUsageCounter) {
+    	this.eventUsageCounter = eventUsageCounter;
     }
     
     @Around("execution(* com.yra.springpr.service.EventService.getByName(..))")
     public Event countEventByNameRequest(ProceedingJoinPoint joinPoint) {
     	try {
             Event event = (Event) joinPoint.proceed();
-            eventRequestStatistics.get(EventRequestType.BY_NAME).countObjectUsage(event);
+            eventUsageCounter.countEvent(event, EventRequestType.BY_NAME);
             return event;
         } catch (Throwable e) {
             throw new RuntimeException(e);
@@ -46,10 +39,6 @@ public class EventRequestAspect {
     
     private void countEventRequest(Booking booking, EventRequestType type) {
     	Event event = booking.getEventTimetable().getEvent();
-        eventRequestStatistics.get(type).countObjectUsage(event);
-    }
-
-    public Map<Event, Integer> getCounter(EventRequestType type) {
-        return eventRequestStatistics.get(type).getCounter();
+    	eventUsageCounter.countEvent(event, type);
     }
 }

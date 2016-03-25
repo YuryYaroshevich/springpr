@@ -3,22 +3,27 @@ package com.yra.springpr.aop.event;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.yra.springpr.model.Event;
+
 public class EventUsageCounterMemoryImpl implements EventUsageCounter {
-	Map<EventRequestType, Integer> counter = new HashMap<>();
+	Map<Event, Map<EventRequestType, Integer>> counter = new HashMap<>();
 
 	@Override
-	public void countEvent(EventRequestType type) {
-		Integer count = counter.get(type);
+	public void countEvent(Event event, EventRequestType type) {
+		Map<EventRequestType, Integer> eventCounter = counter.get(event);
+		if (eventCounter == null) {
+			eventCounter = new HashMap<>();
+		}
+		Integer count = eventCounter.get(type);
         if (count == null) {
-        	counter.put(type, 1);
+        	eventCounter.put(type, 1);
         } else {
-        	counter.put(type, count + 1);
+        	eventCounter.put(type, count + 1);
         }		
 	}
 
 	@Override
-	public Map<EventRequestType, Integer> getCounter() {
+	public Map<Event, Map<EventRequestType, Integer>> getCounter() {
 		return counter;
 	}
-
 }

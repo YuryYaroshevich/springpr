@@ -7,5 +7,5 @@ import com.yra.springpr.model.Event;
 public interface EventUsageCounter {
 	void countEvent(Event event, EventRequestType type);
 	
-	Map<EventRequestType, Integer> getCounter();
+	Map<Event, Map<EventRequestType, Integer>> getCounter();
 }

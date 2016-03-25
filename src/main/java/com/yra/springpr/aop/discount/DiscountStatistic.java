@@ -3,7 +3,6 @@ package com.yra.springpr.aop.discount;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.yra.springpr.aop.UsageCounterMemoryImpl;
 import com.yra.springpr.model.User;
 import com.yra.springpr.service.discount.DiscountStrategy;
 
@@ -16,14 +15,14 @@ public class DiscountStatistic {
 
 	public Map<Class<? extends DiscountStrategy>, Integer> getTotalUsageCounter() {
 		Map<User, Map<Class<? extends DiscountStrategy>, Integer>> counter = discountUsageCounter.getCounter();
-		Map<Class<? extends DiscountStrategy>, Integer> result = new HashMap<>();
-		counter.forEach((user, map) -> {
-			
+		Map<Class<? extends DiscountStrategy>, Integer> result = new HashMap<>();		
+		counter.forEach((user, discountMap) -> {
+			result.putAll(discountMap);
 		});
         return result;
     }
     
-    public Map<User, UsageCounterMemoryImpl<Class<?>>> getDiscountUserUsageCounter() {
-        return null;
+    public Map<User, Map<Class<? extends DiscountStrategy>, Integer>> getDiscountUserUsageCounter() {
+        return discountUsageCounter.getCounter();
     }
 }

@@ -11,8 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.yra.springpr.aop.discount.DiscountCounterAspect;
-import com.yra.springpr.aop.event.EventRequestAspect;
+import com.yra.springpr.aop.discount.DiscountStatistic;
 import com.yra.springpr.aop.event.EventRequestType;
 import com.yra.springpr.aop.event.EventsStatistic;
 import com.yra.springpr.dao.util.DaoCleaner;
@@ -77,14 +76,14 @@ public class Runner {
 		System.out.println(userTickets);
 		
 		System.out.println("---- AOP OUTPUT ----");
-		EventsStatistic eventStatDisplayer = ctx.getBean(EventsStatistic.class);
-		System.out.println(eventStatDisplayer.getEventUsageForRequesType(EventRequestType.BY_NAME));
-		System.out.println(eventStatDisplayer.getEventUsageForRequesType(EventRequestType.TICKET_PRICE));
-		System.out.println(eventStatDisplayer.getEventUsageForRequesType(EventRequestType.BOOK_TICKET));
+		EventsStatistic eventStatistic = ctx.getBean(EventsStatistic.class);
+		System.out.println(eventStatistic.getEventUsageForRequesType(EventRequestType.BY_NAME));
+		System.out.println(eventStatistic.getEventUsageForRequesType(EventRequestType.TICKET_PRICE));
+		System.out.println(eventStatistic.getEventUsageForRequesType(EventRequestType.BOOK_TICKET));
 		
-		DiscountCounterAspect discountCounterAspect = ctx.getBean(DiscountCounterAspect.class);
-		System.out.println(discountCounterAspect.getTotalUsageCounter());
-		System.out.println(discountCounterAspect.getDiscountUserUsageCounter());
+		DiscountStatistic discountStatistic = ctx.getBean(DiscountStatistic.class);
+		System.out.println(discountStatistic.getTotalUsageCounter());
+		System.out.println(discountStatistic.getDiscountUserUsageCounter());
 		
 		ctx.close();
 	}

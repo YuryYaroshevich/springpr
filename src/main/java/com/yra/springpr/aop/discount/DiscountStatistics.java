@@ -6,10 +6,10 @@ import java.util.Map;
 import com.yra.springpr.model.User;
 import com.yra.springpr.service.discount.DiscountStrategy;
 
-public class DiscountStatistic {
+public class DiscountStatistics {
 	private DiscountUsageCounter discountUsageCounter;
 	
-	public DiscountStatistic(DiscountUsageCounter discountUsageCounter) {
+	public DiscountStatistics(DiscountUsageCounter discountUsageCounter) {
 		this.discountUsageCounter = discountUsageCounter;
 	}
 

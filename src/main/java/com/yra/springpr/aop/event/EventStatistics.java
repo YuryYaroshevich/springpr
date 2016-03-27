@@ -5,10 +5,10 @@ import java.util.Map;
 
 import com.yra.springpr.model.Event;
 
-public class EventsStatistic {
+public class EventStatistics {
 	private EventUsageCounter eventUsageCounter;
 
-	public EventsStatistic(EventUsageCounter eventUsageCounter) {
+	public EventStatistics(EventUsageCounter eventUsageCounter) {
 		this.eventUsageCounter = eventUsageCounter;
 	}
 	

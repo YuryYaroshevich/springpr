@@ -10,12 +10,22 @@
  	
     <aop:aspectj-autoproxy />
     
+    <bean id="eventUsageCounter" class="com.yra.springpr.aop.event.EventUsageCounterMemoryImpl" />
     <bean class="com.yra.springpr.aop.event.EventRequestAspect">
-    	<constructor-arg>
-    		<bean class="com.yra.springpr.aop.UsageCounterMemoryImpl" />
-    	</constructor-arg>
-    </bean>	
-    <bean class="com.yra.springpr.aop.discount.DiscountCounterAspect" />
+    	<constructor-arg ref="eventUsageCounter" />
+    </bean>
+    <bean id="eventStatistics" class="com.yra.springpr.aop.event.EventStatistics">
+        <constructor-arg ref="eventUsageCounter" />
+    </bean>
+    
+    <bean id="discountUsageCounter" class="com.yra.springpr.aop.discount.DiscountUsageCounterMemoryImpl" />
+    <bean class="com.yra.springpr.aop.discount.DiscountCounterAspect">
+        <constructor-arg ref="discountUsageCounter" />
+    </bean>
+    <bean id="discountStatistics" class="com.yra.springpr.aop.discount.DiscountStatistics">
+        <constructor-arg ref="discountUsageCounter" />
+    </bean>
+    
     <bean class="com.yra.springpr.aop.discount.LuckyWinnerAspect">
         <constructor-arg ref="bookingDao" />
     </bean>

@@ -113,4 +113,60 @@
 	        newDataType="datetime" tableName="timetable" />
 	</changeSet>
 	
+	<changeSet id="event_statistics_table" author="Yury.Yaroshevich">
+	    <createTable tableName="event_statistics">
+	        <column name="event_id" type="int">
+	            <constraints nullable="false" />
+	        </column>    
+	        <column name="request_type" type="varchar(100)">
+	            <constraints nullable="false" />
+            </column>
+	        <column name="count" type="int" defaultValue="0">
+	            <constraints nullable="false" />
+            </column>	        	
+	    </createTable>
+	    <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="event_statistics"
+	        constraintName="fk_event_id" referencedColumnNames="event_id" referencedTableName="event" />
+	</changeSet>
+	
+	<changeSet id="discount_statistics_table" author="Yury.Yaroshevich">
+	    <createTable tableName="discount_statistics">
+	        <column name="user_id" type="int">
+	            <constraints nullable="false" />
+	        </column>
+	        <column name="discount_type" type="varchar(100)">
+	            <constraints nullable="false" />
+	        </column>
+	        <column name="count" type="int" defaultValue="0">
+	            <constraints nullable="false" />
+	        </column>
+	    </createTable>
+	    <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="discount_statistics"
+	        constraintName="fk_user_id" referencedColumnNames="user_id" referencedTableName="user" />
+	</changeSet>
+	
+	<changeSet id="event_stat_primary_key" author="Yury.Yaroshevich">
+	    <addPrimaryKey columnNames="event_id, request_type"
+	        constraintName="pk_event_stat" tableName="event_statistics" />
+	</changeSet>
+	
+	<changeSet id="discount_stat_primary_key" author="Yury.Yaroshevich">
+	    <addPrimaryKey columnNames="user_id, discount_type"
+	        constraintName="pk_discount_stat" tableName="discount_statistics" />
+	</changeSet>
+	
+	<changeSet id="add_to_discount_statistics_procedure" author="Yury.Yaroshevich">
+	    <createProcedure path="add_to_discount_statistics_procedure.sql"
+	        relativeToChangelogFile="true"
+	        procedureName="add_to_discount_statistics"
+	        schemaName="spring_pr" />
+	</changeSet>
+	
+	<changeSet id="add_to_event_statistics_procedure" author="Yury.Yaroshevich">
+	    <createProcedure path="add_to_event_statistics_procedure.sql"
+	        relativeToChangelogFile="true"
+	        procedureName="add_to_event_statistics"
+	        schemaName="spring_pr" />
+	</changeSet>
+		
 </databaseChangeLog>

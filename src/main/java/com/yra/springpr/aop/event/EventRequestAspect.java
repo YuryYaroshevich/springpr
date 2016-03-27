@@ -10,7 +10,7 @@ import com.yra.springpr.model.Event;
 
 @Aspect
 public class EventRequestAspect {
-    private EventUsageCounter eventUsageCounter = new EventUsageCounterMemoryImpl();
+    private EventUsageCounter eventUsageCounter;
     
     public EventRequestAspect(EventUsageCounter eventUsageCounter) {
     	this.eventUsageCounter = eventUsageCounter;

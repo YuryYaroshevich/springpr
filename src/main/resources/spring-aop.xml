@@ -8,30 +8,22 @@
  		http://www.springframework.org/schema/aop
  		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
  	
+ 	<import resource="spring-aop-counters.xml"/>
+ 	
     <aop:aspectj-autoproxy />
     
-    <bean id="eventUsageCounterInMemory" class="com.yra.springpr.aop.event.EventUsageCounterMemoryImpl" />
-    <bean id="eventUsageCounterJdbc" class="com.yra.springpr.aop.event.EventUsageCounterSpringJdbcImpl">
-    	<constructor-arg ref="jdbcTemplate" />
-    </bean>
-    
     <bean class="com.yra.springpr.aop.event.EventRequestAspect">
-    	<constructor-arg ref="eventUsageCounterJdbc" />
+    	<constructor-arg ref="eventUsageCounter" />
     </bean>
     <bean id="eventStatistics" class="com.yra.springpr.aop.event.EventStatistics">
-        <constructor-arg ref="eventUsageCounterJdbc" />
-    </bean>
-    
-    <bean id="discountUsageCounterInMemory" class="com.yra.springpr.aop.discount.DiscountUsageCounterMemoryImpl" />
-    <bean id="discountUsageCounterJdbc" class="com.yra.springpr.aop.discount.DiscountUsageCounterSpringJdbcImpl">
-    	<constructor-arg ref="jdbcTemplate" />
+        <constructor-arg ref="eventUsageCounter" />
     </bean>
     
     <bean class="com.yra.springpr.aop.discount.DiscountCounterAspect">
-        <constructor-arg ref="discountUsageCounterJdbc" />
+        <constructor-arg ref="discountUsageCounter" />
     </bean>
     <bean id="discountStatistics" class="com.yra.springpr.aop.discount.DiscountStatistics">
-        <constructor-arg ref="discountUsageCounterJdbc" />
+        <constructor-arg ref="discountUsageCounter" />
     </bean>
     
     <bean class="com.yra.springpr.aop.discount.LuckyWinnerAspect">

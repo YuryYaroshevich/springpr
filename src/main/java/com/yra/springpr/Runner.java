@@ -34,11 +34,14 @@ public class Runner {
 	private static DateFormat dateTimeFormatter = new SimpleDateFormat("M/dd/yyyy hh:mm:ss");
 	
     public static void main(String[] args) throws ParseException {
+    	System.setProperty("spring.profiles.active", "jdbcDbStorage"); // "inMemoryStorage" "jdbcDbStorage"
 		ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
 		
-		DaoCleaner daoCleaner = ctx.getBean(DaoCleaner.class);
-        List<String> tables = Lists.newArrayList("booking", "timetable", "event_statistics", "discount_statistics", "event", "user");
-        daoCleaner.cleanTables(tables);
+		if ("jdbcDbStorage".equals(System.getProperty("spring.profiles.active"))) {
+			DaoCleaner daoCleaner = ctx.getBean(DaoCleaner.class);
+	        List<String> tables = Lists.newArrayList("booking", "timetable", "event_statistics", "discount_statistics", "event", "user");
+	        daoCleaner.cleanTables(tables);
+		}		
 		
 		UserService userService = ctx.getBean("userService", UserService.class);
 		User user = new User("Batman Batmanovich", "batman@epam.com", dateFormatter.parse("03/07/1992"), 23.5);

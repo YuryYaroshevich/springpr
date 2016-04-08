@@ -6,12 +6,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.yra.springpr.model.Auditorium;
 import com.yra.springpr.model.Event;
 import com.yra.springpr.model.EventTimetable;
 
-public class EventDaoMemoryImpl implements EventDao {
+public class EventDaoMemoryImpl implements EventDao, TimetableDao {
     private Map<Long, Event> eventStorage = new HashMap<>();
     private Map<EventTimetable, Auditorium> timetable = new HashMap<>();
 
@@ -76,4 +77,11 @@ public class EventDaoMemoryImpl implements EventDao {
             Auditorium auditorium) {
         timetable.put(eventTimetable, auditorium);
     }
+
+	@Override
+	public List<EventTimetable> getEventTimetables(Event event) {
+		return timetable.keySet().stream().filter(eventTimetable -> {
+			return eventTimetable.getEvent().equals(event);
+		}).collect(Collectors.toList());
+	}
 }

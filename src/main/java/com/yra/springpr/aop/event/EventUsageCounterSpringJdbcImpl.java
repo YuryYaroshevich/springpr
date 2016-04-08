@@ -4,31 +4,25 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 
 import com.yra.springpr.model.Event;
 import com.yra.springpr.model.Rating;
 
 public class EventUsageCounterSpringJdbcImpl implements EventUsageCounter {
     private NamedParameterJdbcTemplate jdbcTemplate;
-    private SimpleJdbcCall addToEventStatCall;
     
-    public EventUsageCounterSpringJdbcImpl(
-            NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public EventUsageCounterSpringJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        addToEventStatCall = new SimpleJdbcCall(dataSource).withProcedureName("add_to_event_statistics");
     }
 
     @Override
     public void countEvent(Event event, EventRequestType type) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("event_id", event.getId());
-        params.addValue("request_type", type);
-        addToEventStatCall.execute(params);
+        params.addValue("request_type", type.toString());
+        jdbcTemplate.update("call add_to_event_statistics(:event_id, :request_type)", params);
     }
 
     @Override

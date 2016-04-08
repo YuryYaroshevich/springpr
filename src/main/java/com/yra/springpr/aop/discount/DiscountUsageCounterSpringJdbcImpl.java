@@ -4,36 +4,30 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 
 import com.yra.springpr.model.User;
 import com.yra.springpr.service.discount.DiscountStrategy;
 
 public class DiscountUsageCounterSpringJdbcImpl implements DiscountUsageCounter {
     private NamedParameterJdbcTemplate jdbcTemplate;
-    private SimpleJdbcCall discountStatCall;
     
-    public DiscountUsageCounterSpringJdbcImpl(
-            NamedParameterJdbcTemplate jdbcTemplate, DataSource dataSource) {
+    public DiscountUsageCounterSpringJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.discountStatCall = new SimpleJdbcCall(dataSource).withProcedureName("add_to_discount_statistics");
     }
 
     @Override
     public void countUsage(User user, Class<? extends DiscountStrategy> clazz) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("user_id", user.getId());
-        params.addValue("discount_type", clazz.toString());
-        discountStatCall.execute(params);
+        params.addValue("discount_type", clazz.getCanonicalName());
+        jdbcTemplate.update("call add_to_discount_statistics(:user_id, :discount_type)", params);
     }
 
     @Override
     public Map<User, Map<Class<? extends DiscountStrategy>, Integer>> getCounter() {
-        return jdbcTemplate.query("select user_id, name, email, birth_date, money, discount_type, count from discount_statistics ds inner join user u on ds.user_id = u.user_id",
+        return jdbcTemplate.query("select u.user_id, name, email, birth_date, money, discount_type, count from discount_statistics ds inner join user u on ds.user_id = u.user_id",
                 (ResultSet rs) -> {
                    Map<User, Map<Class<? extends DiscountStrategy>, Integer>> result = new HashMap<>();
                    while (rs.next()) {

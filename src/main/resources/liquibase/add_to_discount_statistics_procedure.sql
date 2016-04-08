@@ -1,3 +1,4 @@
+drop procedure if exists add_to_discount_statistics;
 create procedure add_to_discount_statistics(user_id int, discount_type varchar(100))
 	begin
 		declare rows_inserted_num int;

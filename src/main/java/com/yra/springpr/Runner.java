@@ -33,11 +33,11 @@ public class Runner {
 	private static DateFormat dateFormatter = new SimpleDateFormat("M/dd/yyyy");
 	private static DateFormat dateTimeFormatter = new SimpleDateFormat("M/dd/yyyy hh:mm:ss");
 	
-    public static void main(String[] args) throws ParseException {	    
+    public static void main(String[] args) throws ParseException {
 		ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
 		
 		DaoCleaner daoCleaner = ctx.getBean(DaoCleaner.class);
-        List<String> tables = Lists.newArrayList("booking", "timetable", "event", "user");
+        List<String> tables = Lists.newArrayList("booking", "timetable", "event_statistics", "discount_statistics", "event", "user");
         daoCleaner.cleanTables(tables);
 		
 		UserService userService = ctx.getBean("userService", UserService.class);

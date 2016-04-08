@@ -1,3 +1,4 @@
+drop procedure if exists add_to_event_statistics;
 create procedure add_to_event_statistics(event_id int, request_type varchar(100))
 	begin
 		declare rows_inserted_num int;

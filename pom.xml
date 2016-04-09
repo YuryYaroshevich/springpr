@@ -62,9 +62,9 @@
 			<version>${spring.ver}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
-			<version>10.12.1.1</version>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
@@ -84,7 +84,7 @@
 					<driver>com.mysql.jdbc.Driver</driver>
 					<url>jdbc:mysql://localhost:3306/spring_pr?createDatabaseIfNotExist=true</url>
 					<username>root</username>
-					<password>root</password>
+					<password>1234</password>
 				</configuration>
 				<executions>
 					<execution>
